@@ -53,15 +53,28 @@ npm run preview  # посмотреть собранную версию
 
 ## Как выложить в интернет
 
-В репозитории есть готовый workflow `.github/workflows/deploy.yml`.
-Чтобы он заработал:
+### Vercel (рекомендуется)
 
-1. Слей ветку в `main`.
-2. В настройках репозитория: **Settings → Pages → Source → GitHub Actions**.
-3. После push игра будет доступна на `https://<username>.github.io/game/`.
+1. Зайти на [vercel.com/new](https://vercel.com/new) и войти через GitHub.
+2. Выбрать репозиторий `game` → **Import**.
+3. Ничего не настраивать — параметры сборки уже лежат в `vercel.json`
+   (framework `vite`, команда `npm run build`, папка `dist`).
+4. **Deploy**.
 
-Альтернативы без настройки: закинуть папку `dist/` на
-[Netlify Drop](https://app.netlify.com/drop) или в Vercel.
+Дальше каждый push в основную ветку пересобирает сайт автоматически.
+
+### GitHub Pages
+
+Есть готовый workflow `.github/workflows/deploy.yml`. Он срабатывает на
+push в `main`, так что сначала нужно завести такую ветку. Затем в
+настройках репозитория: **Settings → Pages → Source → GitHub Actions**.
+Игра окажется на `https://<username>.github.io/game/`.
+
+### Без всякой настройки
+
+`npm run build` и папку `dist/` перетащить на
+[Netlify Drop](https://app.netlify.com/drop). Или `npm run build:standalone`
+и отправить одним html-файлом.
 
 ## Техническое
 
