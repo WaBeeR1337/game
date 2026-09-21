@@ -1,0 +1,354 @@
+/* Шрифт Pixelify Sans (SIL Open Font License) лежит в public/fonts —
+   игра работает без интернета и без CDN. */
+@font-face {
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/pixelify-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/pixelify-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/pixelify-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ===================== ПИКСЕЛЬНАЯ ТЕМА ===================== */
+:root {
+  --bg: #16122a;
+  --bg-deep: #0d0a1c;
+  --panel: #241d44;
+  --panel-2: #2f2657;
+  --ink: #f4eefc;
+  --dim: #9b8fc7;
+  --pink: #ff4d8d;
+  --pink-dark: #b32a5d;
+  --cyan: #3ff0d4;
+  --yellow: #ffd93d;
+  --green: #5ddf6a;
+  --red: #ff5c5c;
+  --px: 4px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-family: 'Pixelify Sans', 'Courier New', monospace;
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  image-rendering: pixelated;
+  overflow-x: hidden;
+}
+
+button, input { font-family: inherit; }
+
+/* ---- фон: звёздное поле + виньетка ---- */
+.stage {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 16px 40px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 77, 141, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(63, 240, 212, 0.14), transparent 45%),
+    var(--bg);
+  position: relative;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+.star {
+  position: absolute;
+  width: var(--px);
+  height: var(--px);
+  background: var(--ink);
+  animation: twinkle 3s steps(2, end) infinite;
+}
+@keyframes twinkle { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+
+/* CRT-полосы поверх всего */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.16) 0 2px,
+    transparent 2px 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 620px;
+  position: relative;
+  z-index: 1;
+  margin: auto 0; /* центрирует короткие экраны, но не обрезает длинные */
+}
+
+/* ---- пиксельная рамка ---- */
+.pixel-box {
+  background: var(--panel);
+  padding: 20px;
+  position: relative;
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--panel),
+    0 var(--px) 0 0 var(--panel),
+    calc(var(--px) * -1) 0 0 0 var(--panel),
+    var(--px) 0 0 0 var(--panel),
+    0 calc(var(--px) * -2) 0 0 #0d0a1c,
+    0 calc(var(--px) * 2) 0 0 #0d0a1c,
+    calc(var(--px) * -2) 0 0 0 #0d0a1c,
+    calc(var(--px) * 2) 0 0 0 #0d0a1c,
+    calc(var(--px) * -1) calc(var(--px) * -1) 0 0 #0d0a1c,
+    var(--px) calc(var(--px) * -1) 0 0 #0d0a1c,
+    calc(var(--px) * -1) var(--px) 0 0 #0d0a1c,
+    var(--px) var(--px) 0 0 #0d0a1c;
+  margin: var(--px) calc(var(--px) * 2);
+}
+
+/* ---- кнопки ---- */
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background: var(--panel-2);
+  color: var(--ink);
+  font-size: 18px;
+  padding: 14px 16px;
+  text-align: center;
+  position: relative;
+  box-shadow:
+    inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0, 0, 0, 0.45),
+    inset var(--px) var(--px) 0 0 rgba(255, 255, 255, 0.14),
+    0 var(--px) 0 0 #0d0a1c;
+  transition: transform 0.06s steps(1, end);
+  touch-action: manipulation;
+}
+.btn:hover:not(:disabled) { background: #3b3070; }
+.btn:active:not(:disabled) { transform: translateY(var(--px)); box-shadow: inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0,0,0,0.45); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btn.primary { background: var(--pink); color: #2a0615; }
+.btn.primary:hover:not(:disabled) { background: #ff6ea2; }
+.btn.good { background: var(--green); color: #0a2b0e; }
+.btn.bad { background: var(--red); color: #350808; }
+.btn.ghost { background: transparent; box-shadow: inset 0 0 0 var(--px) var(--panel-2); color: var(--dim); }
+.btn.small { width: auto; display: inline-block; padding: 10px 18px; font-size: 16px; }
+
+/* ---- типографика ---- */
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: 2px;
+  color: var(--pink);
+  text-shadow: var(--px) var(--px) 0 var(--pink-dark), calc(var(--px) * 2) calc(var(--px) * 2) 0 #0d0a1c;
+}
+.title.small { font-size: 26px; color: var(--cyan); text-shadow: var(--px) var(--px) 0 #0d0a1c; }
+.subtitle { color: var(--yellow); margin: 0 0 18px; font-size: 18px; }
+.hint { color: var(--dim); font-size: 16px; margin: 0 0 16px; }
+.center { text-align: center; }
+.stack > * + * { margin-top: 12px; }
+.mt { margin-top: 20px; }
+
+/* ---- HUD: прогресс по уровням ---- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 calc(var(--px) * 2) 14px;
+  font-size: 15px;
+  color: var(--dim);
+}
+.hearts { display: flex; gap: 6px; }
+.heart {
+  width: 18px; height: 18px;
+  background: var(--panel-2);
+  clip-path: polygon(50% 100%, 0 45%, 0 20%, 25% 0, 50% 20%, 75% 0, 100% 20%, 100% 45%);
+}
+.heart.on { background: var(--pink); }
+.heart.now { background: var(--yellow); animation: pulse 0.8s steps(2, end) infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+/* ---- квиз ---- */
+.q-num { color: var(--cyan); font-size: 15px; margin-bottom: 6px; }
+.q-text { font-size: 22px; margin: 0 0 18px; }
+.opt { text-align: left; }
+.opt.correct { background: var(--green); color: #0a2b0e; }
+.opt.wrong { background: var(--red); color: #350808; }
+
+/* ---- память ---- */
+.grid-memory {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.card {
+  aspect-ratio: 1;
+  border: none;
+  cursor: pointer;
+  background: var(--panel-2);
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+  box-shadow:
+    inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0, 0, 0, 0.45),
+    inset var(--px) var(--px) 0 0 rgba(255, 255, 255, 0.12);
+  transition: background 0.1s steps(1, end);
+  touch-action: manipulation;
+}
+.card.open { background: var(--pink); }
+.card.done { background: var(--green); cursor: default; }
+
+/* ---- фраза ---- */
+.words { display: flex; flex-wrap: wrap; gap: 8px; }
+.word {
+  border: none;
+  cursor: pointer;
+  background: var(--panel-2);
+  color: var(--ink);
+  font-size: 18px;
+  padding: 10px 14px;
+  box-shadow: inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0, 0, 0, 0.45);
+  touch-action: manipulation;
+}
+.word:hover { background: #3b3070; }
+.word.used { opacity: 0.25; cursor: default; }
+.slot-area {
+  min-height: 88px;
+  background: var(--bg-deep);
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+  margin-bottom: 16px;
+  box-shadow: inset 0 0 0 var(--px) var(--panel-2);
+}
+.slot-area.shake { animation: shake 0.3s steps(2, end); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.chip { background: var(--pink); color: #2a0615; padding: 10px 14px; cursor: pointer; }
+
+/* ---- аркада ---- */
+.arcade {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 60vh;
+  display: block;
+  background: var(--bg-deep);
+  box-shadow: inset 0 0 0 var(--px) var(--panel-2);
+  touch-action: none;
+  image-rendering: pixelated;
+}
+.arcade-hud { display: flex; justify-content: space-between; font-size: 16px; color: var(--dim); margin-bottom: 10px; }
+.arcade-hud b { color: var(--yellow); }
+
+/* ---- загадка ---- */
+.input {
+  width: 100%;
+  border: none;
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-size: 20px;
+  padding: 14px;
+  outline: none;
+  box-shadow: inset 0 0 0 var(--px) var(--panel-2);
+}
+.input:focus { box-shadow: inset 0 0 0 var(--px) var(--cyan); }
+.error { color: var(--red); font-size: 16px; min-height: 24px; margin: 8px 0 0; }
+.tip { color: var(--yellow); font-size: 16px; margin-top: 10px; }
+
+/* ---- экран уровня пройден ---- */
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 10, 28, 0.92);
+  animation: fadein 0.2s steps(2, end);
+}
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.flash h2 { font-size: 34px; color: var(--green); margin: 0; text-shadow: var(--px) var(--px) 0 #0d0a1c; }
+
+/* ---- финал ---- */
+.cert-preview {
+  width: 100%;
+  display: block;
+  image-rendering: pixelated;
+  box-shadow: 0 0 0 var(--px) var(--panel-2);
+}
+.prize-msg {
+  background: var(--bg-deep);
+  padding: 16px;
+  font-size: 18px;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 var(--px) var(--pink);
+  margin-top: 16px;
+}
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 45; }
+.conf-bit { position: absolute; width: 8px; height: 8px; animation: fall linear forwards; }
+@keyframes fall {
+  from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  to { transform: translateY(110vh) rotate(360deg); opacity: 0.9; }
+}
+
+/* ---- мелочи ---- */
+.sound-toggle {
+  position: fixed;
+  bottom: 10px; right: 10px;
+  z-index: 60;
+  background: var(--panel);
+  color: var(--dim);
+  border: none;
+  font-size: 18px;
+  padding: 8px 10px;
+  cursor: pointer;
+  box-shadow: 0 0 0 var(--px) var(--bg-deep);
+}
+
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .title { font-size: 30px; }
+  .title.small { font-size: 22px; }
+  .q-text { font-size: 19px; }
+  .pixel-box { padding: 16px; }
+  .card { font-size: 24px; }
+}
