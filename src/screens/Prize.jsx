@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import config from '../config';
 import sfx from '../sound';
 
@@ -13,6 +13,8 @@ const certificateName = playerNameDative || playerName;
 const CW = 1000;
 const TERMS_STEP = 32;
 const CH = 760 + Math.max(0, prize.terms.length - 3) * TERMS_STEP;
+
+const FILE_NAME = 'sertifikat-na-zhelanie.png';
 
 const COLORS = ['#ff4d8d', '#3ff0d4', '#ffd93d', '#5ddf6a', '#f4eefc'];
 
@@ -113,6 +115,9 @@ function drawCertificate(ctx) {
 
 export default function Prize({ onReplay }) {
   const canvasRef = useRef(null);
+  const fileRef = useRef(null);          // готовый PNG для системного «Поделиться»
+  const [imageUrl, setImageUrl] = useState(null);
+  const [canShare, setCanShare] = useState(false);
 
   const confetti = useMemo(
     () =>
@@ -127,29 +132,64 @@ export default function Prize({ onReplay }) {
 
   useEffect(() => {
     sfx.win();
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    // Рисуем в canvas, который на странице не показываем: на экран идёт <img>.
+    // Картинку на iPhone можно сохранить долгим нажатием, canvas — нельзя.
+    const canvas = canvasRef.current || document.createElement('canvas');
+    canvasRef.current = canvas;
+    canvas.width = CW;
+    canvas.height = CH;
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
     let cancelled = false;
-    const render = () => { if (!cancelled) drawCertificate(ctx); };
 
-    render(); // сразу — на запасном шрифте
-    // и ещё раз, когда подгрузится пиксельный шрифт
-    if (document.fonts?.ready) document.fonts.ready.then(render);
+    const render = () => {
+      if (cancelled) return;
+      drawCertificate(ctx);
+      setImageUrl(canvas.toDataURL('image/png'));
+
+      // Файл готовим заранее: Safari разрешает navigator.share только
+      // внутри обработчика нажатия, без единого await перед вызовом.
+      canvas.toBlob((blob) => {
+        if (cancelled || !blob) return;
+        try {
+          const file = new File([blob], FILE_NAME, { type: 'image/png' });
+          fileRef.current = file;
+          setCanShare(Boolean(navigator.canShare?.({ files: [file] })));
+        } catch {
+          fileRef.current = null; // File может быть недоступен в старых браузерах
+        }
+      }, 'image/png');
+    };
+
+    render();                                        // сразу — на запасном шрифте
+    if (document.fonts?.ready) document.fonts.ready.then(render); // и с пиксельным
 
     return () => { cancelled = true; };
   }, []);
 
-  function download() {
+  function save() {
     sfx.click();
+    const file = fileRef.current;
+
+    // iOS: системное меню, в нём есть «Сохранить в Фото».
+    // Вызываем синхронно, иначе Safari сочтёт это не пользовательским действием.
+    if (file && navigator.canShare?.({ files: [file] })) {
+      navigator.share({ files: [file], title: prize.certificateTitle }).catch(() => {
+        // отмена или отказ — просто ничего не делаем
+      });
+      return;
+    }
+
+    // Обычные браузеры: честное скачивание файла.
     const canvas = canvasRef.current;
     if (!canvas) return;
     const link = document.createElement('a');
-    link.download = 'sertifikat-na-zhelanie.png';
-    link.href = canvas.toDataURL('image/png');
+    link.download = FILE_NAME;
+    link.href = imageUrl || canvas.toDataURL('image/png');
+    document.body.appendChild(link);
     link.click();
+    link.remove();
   }
 
   return (
@@ -173,12 +213,20 @@ export default function Prize({ onReplay }) {
         <h1 className="title">{prize.title}</h1>
         <p className="subtitle">{prize.subtitle}</p>
 
-        <canvas ref={canvasRef} className="cert-preview" width={CW} height={CH} />
+        {imageUrl && (
+          <img className="cert-preview" src={imageUrl} alt={prize.certificateTitle} />
+        )}
 
         <p className="prize-msg">{prize.message}</p>
 
         <div className="stack mt">
-          <button className="btn primary" onClick={download}>{prize.downloadButton}</button>
+          <button className="btn primary" onClick={save}>
+            {canShare ? prize.shareButton || prize.downloadButton : prize.downloadButton}
+          </button>
+          <p className="save-hint">
+            {prize.saveHint ||
+              'Не сохранилось? Задержи палец на сертификате и выбери «Сохранить в Фото».'}
+          </p>
           <button className="btn ghost" onClick={onReplay}>{prize.replayButton}</button>
         </div>
       </div>
