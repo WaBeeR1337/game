@@ -4,14 +4,14 @@ import sfx from '../sound';
 
 const { riddle } = config;
 
-// Сравниваем «мягко»: без регистра, лишних пробелов, точек и ё/е.
+// Сравниваем «мягко»: оставляем только буквы и цифры. Тогда дата,
+// записанная как 12.01.2002, 12 01 2002, 12/01/2002 или 12012002 —
+// это один и тот же ответ, как и обещает подсказка на экране.
 function normalize(value) {
   return value
     .toLowerCase()
     .replace(/ё/g, 'е')
-    .replace(/[.,!?-]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .replace(/[^\p{L}\p{N}]/gu, '');
 }
 
 export default function Riddle({ onComplete }) {
