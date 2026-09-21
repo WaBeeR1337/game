@@ -1,38 +1,62 @@
-/* Шрифт Pixelify Sans (SIL Open Font License) лежит в public/fonts —
-   игра работает без интернета и без CDN. */
+/* Шрифты лежат в public/fonts (оба под SIL Open Font License),
+   поэтому игра работает без интернета и без CDN.
+   Press Start 2P — аркадные заголовки, Tiny5 — читаемый текст и цифры. */
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Press Start 2P';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/pixelify-cyrillic.woff2') format('woff2');
+  src: url('/fonts/press-cyrillic.woff2') format('woff2');
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Press Start 2P';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/pixelify-latin-ext.woff2') format('woff2');
+  src: url('/fonts/press-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Press Start 2P';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/pixelify-latin.woff2') format('woff2');
+  src: url('/fonts/press-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Tiny5';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/tiny5-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Tiny5';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/tiny5-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Tiny5';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/tiny5-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* ===================== ПИКСЕЛЬНАЯ ТЕМА ===================== */
 :root {
   --bg: #16122a;
   --bg-deep: #0d0a1c;
   --panel: #241d44;
   --panel-2: #2f2657;
   --ink: #f4eefc;
-  --dim: #9b8fc7;
+  --dim: #c3b6e8;          /* пояснения: подняли контраст, было слишком тускло */
   --pink: #ff4d8d;
   --pink-dark: #b32a5d;
   --cyan: #3ff0d4;
@@ -40,6 +64,16 @@
   --green: #5ddf6a;
   --red: #ff5c5c;
   --px: 4px;
+
+  /* Заголовки — аркадным шрифтом, текст и цифры — читаемым пиксельным */
+  --font-display: 'Press Start 2P', 'Courier New', monospace;
+  --font-body: 'Tiny5', 'Courier New', monospace;
+}
+
+/* Дефолтное синее выделение на тёмно-фиолетовом фоне не читалось */
+::selection {
+  background: var(--pink);
+  color: #140a1f;
 }
 
 * { box-sizing: border-box; }
@@ -50,9 +84,9 @@ body {
   margin: 0;
   background: var(--bg-deep);
   color: var(--ink);
-  font-family: 'Pixelify Sans', 'Courier New', monospace;
-  font-size: 18px;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 21px;
+  line-height: 1.45;
   -webkit-font-smoothing: none;
   font-smooth: never;
   image-rendering: pixelated;
@@ -142,7 +176,7 @@ button, input { font-family: inherit; }
   cursor: pointer;
   background: var(--panel-2);
   color: var(--ink);
-  font-size: 18px;
+  font-size: 21px;
   padding: 14px 16px;
   text-align: center;
   position: relative;
@@ -157,25 +191,44 @@ button, input { font-family: inherit; }
 .btn:active:not(:disabled) { transform: translateY(var(--px)); box-shadow: inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0,0,0,0.45); }
 .btn:disabled { opacity: 0.5; cursor: default; }
 
-.btn.primary { background: var(--pink); color: #2a0615; }
+.btn.primary {
+  background: var(--pink);
+  color: #2a0615;
+  font-family: var(--font-display);
+  font-size: clamp(11px, 3.2vw, 14px);
+  line-height: 1.6;
+  padding: 16px 12px;
+}
 .btn.primary:hover:not(:disabled) { background: #ff6ea2; }
 .btn.good { background: var(--green); color: #0a2b0e; }
 .btn.bad { background: var(--red); color: #350808; }
-.btn.ghost { background: transparent; box-shadow: inset 0 0 0 var(--px) var(--panel-2); color: var(--dim); }
+.btn.ghost {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--px) var(--panel-2);
+  color: var(--dim);
+  font-family: var(--font-display);
+  font-size: clamp(11px, 3.2vw, 14px);
+  line-height: 1.6;
+  padding: 16px 12px;
+}
 .btn.small { width: auto; display: inline-block; padding: 10px 18px; font-size: 16px; }
 
 /* ---- типографика ---- */
 .title {
-  font-size: 40px;
-  font-weight: 700;
-  margin: 0 0 6px;
-  letter-spacing: 2px;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 6vw, 30px);
+  line-height: 1.35;
+  margin: 0 0 14px;
   color: var(--pink);
   text-shadow: var(--px) var(--px) 0 var(--pink-dark), calc(var(--px) * 2) calc(var(--px) * 2) 0 #0d0a1c;
 }
-.title.small { font-size: 26px; color: var(--cyan); text-shadow: var(--px) var(--px) 0 #0d0a1c; }
-.subtitle { color: var(--yellow); margin: 0 0 18px; font-size: 18px; }
-.hint { color: var(--dim); font-size: 16px; margin: 0 0 16px; }
+.title.small {
+  font-size: clamp(14px, 4.2vw, 18px);
+  color: var(--cyan);
+  text-shadow: var(--px) var(--px) 0 #0d0a1c;
+}
+.subtitle { color: var(--yellow); margin: 0 0 18px; font-size: 20px; }
+.hint { color: var(--dim); font-size: 18px; margin: 0 0 16px; }
 .center { text-align: center; }
 .stack > * + * { margin-top: 12px; }
 .mt { margin-top: 20px; }
@@ -187,7 +240,7 @@ button, input { font-family: inherit; }
   justify-content: space-between;
   gap: 10px;
   margin: 0 calc(var(--px) * 2) 14px;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--dim);
 }
 .hearts { display: flex; gap: 6px; }
@@ -201,8 +254,8 @@ button, input { font-family: inherit; }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
 
 /* ---- квиз ---- */
-.q-num { color: var(--cyan); font-size: 15px; margin-bottom: 6px; }
-.q-text { font-size: 22px; margin: 0 0 18px; }
+.q-num { color: var(--cyan); font-size: 17px; margin-bottom: 6px; }
+.q-text { font-size: 24px; margin: 0 0 18px; }
 .opt { text-align: left; }
 .opt.correct { background: var(--green); color: #0a2b0e; }
 .opt.wrong { background: var(--red); color: #350808; }
@@ -239,7 +292,7 @@ button, input { font-family: inherit; }
   cursor: pointer;
   background: var(--panel-2);
   color: var(--ink);
-  font-size: 18px;
+  font-size: 21px;
   padding: 10px 14px;
   box-shadow: inset calc(var(--px) * -1) calc(var(--px) * -1) 0 0 rgba(0, 0, 0, 0.45);
   touch-action: manipulation;
@@ -276,7 +329,7 @@ button, input { font-family: inherit; }
   touch-action: none;
   image-rendering: pixelated;
 }
-.arcade-hud { display: flex; justify-content: space-between; font-size: 16px; color: var(--dim); margin-bottom: 10px; }
+.arcade-hud { display: flex; justify-content: space-between; font-size: 18px; color: var(--dim); margin-bottom: 10px; }
 .arcade-hud b { color: var(--yellow); }
 
 /* ---- загадка ---- */
@@ -285,14 +338,14 @@ button, input { font-family: inherit; }
   border: none;
   background: var(--bg-deep);
   color: var(--ink);
-  font-size: 20px;
+  font-size: 23px;
   padding: 14px;
   outline: none;
   box-shadow: inset 0 0 0 var(--px) var(--panel-2);
 }
 .input:focus { box-shadow: inset 0 0 0 var(--px) var(--cyan); }
-.error { color: var(--red); font-size: 16px; min-height: 24px; margin: 8px 0 0; }
-.tip { color: var(--yellow); font-size: 16px; margin-top: 10px; }
+.error { color: var(--red); font-size: 18px; min-height: 24px; margin: 8px 0 0; }
+.tip { color: var(--yellow); font-size: 18px; margin-top: 10px; }
 
 /* ---- экран уровня пройден ---- */
 .flash {
@@ -306,7 +359,7 @@ button, input { font-family: inherit; }
   animation: fadein 0.2s steps(2, end);
 }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-.flash h2 { font-size: 34px; color: var(--green); margin: 0; text-shadow: var(--px) var(--px) 0 #0d0a1c; }
+.flash h2 { font-family: var(--font-display); font-size: clamp(14px, 4.5vw, 20px); line-height: 1.5; text-align: center; padding: 0 20px; color: var(--green); margin: 0; text-shadow: var(--px) var(--px) 0 #0d0a1c; }
 
 /* ---- финал ---- */
 .cert-preview {
@@ -318,7 +371,7 @@ button, input { font-family: inherit; }
 .prize-msg {
   background: var(--bg-deep);
   padding: 16px;
-  font-size: 18px;
+  font-size: 21px;
   color: var(--ink);
   box-shadow: inset 0 0 0 var(--px) var(--pink);
   margin-top: 16px;
@@ -345,10 +398,9 @@ button, input { font-family: inherit; }
 }
 
 @media (max-width: 480px) {
-  body { font-size: 16px; }
-  .title { font-size: 30px; }
-  .title.small { font-size: 22px; }
-  .q-text { font-size: 19px; }
+  body { font-size: 19px; }
+  .btn { font-size: 19px; }
+  .q-text { font-size: 21px; }
   .pixel-box { padding: 16px; }
   .card { font-size: 24px; }
 }

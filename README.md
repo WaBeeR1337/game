@@ -68,7 +68,8 @@ npm run preview  # посмотреть собранную версию
 - React 18 + Vite, без сторонних UI-библиотек;
 - звуки генерируются через WebAudio — ни одного медиафайла в репозитории;
 - сертификат рисуется на `<canvas>` и скачивается как PNG;
-- шрифт [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans)
-  (SIL Open Font License) лежит в `public/fonts`, поэтому игра работает
-  без интернета;
+- шрифты [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P)
+  (заголовки и кнопки) и [Tiny5](https://fonts.google.com/specimen/Tiny5)
+  (текст и цифры) — оба под SIL Open Font License, лежат в `public/fonts`,
+  поэтому игра работает без интернета;
 - вёрстка адаптивная, аркада управляется клавишами (стрелки, A/D) и пальцем.

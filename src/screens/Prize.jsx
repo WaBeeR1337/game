@@ -32,8 +32,23 @@ function pixelHeart(ctx, x, y, size, color) {
   );
 }
 
+const display = (size) => `${size}px "Press Start 2P", "Courier New", monospace`;
+const body = (size) => `${size}px "Tiny5", "Courier New", monospace`;
+
+// Строка рисуется по центру и ужимается, если не влезает по ширине:
+// имя и формулировки берутся из config, длину заранее не угадать.
+function fitted(ctx, text, y, maxWidth, size, family) {
+  let current = size;
+  ctx.font = family(current);
+  while (current > 10 && ctx.measureText(text).width > maxWidth) {
+    current -= 2;
+    ctx.font = family(current);
+  }
+  ctx.fillText(text, CW / 2, y);
+}
+
 function drawCertificate(ctx) {
-  const font = (size, weight = 400) => `${weight} ${size}px "Pixelify Sans", "Courier New", monospace`;
+  const inner = CW - 240; // рамка минус угловые сердечки
 
   // фон
   ctx.fillStyle = '#16122a';
@@ -59,42 +74,37 @@ function drawCertificate(ctx) {
 
   // заголовок
   ctx.fillStyle = '#ffd93d';
-  ctx.font = font(78, 700);
-  ctx.fillText(prize.certificateTitle, CW / 2, 196);
+  fitted(ctx, prize.certificateTitle, 210, inner, 58, display);
 
   // основной текст
   ctx.fillStyle = '#f4eefc';
-  ctx.font = font(34);
-  ctx.fillText(prize.certificateBody, CW / 2, 258);
+  fitted(ctx, prize.certificateBody, 272, inner, 36, body);
 
   // разделитель
   ctx.fillStyle = '#3ff0d4';
-  ctx.fillRect(CW / 2 - 180, 288, 360, 6);
+  ctx.fillRect(CW / 2 - 180, 300, 360, 6);
 
   // кому
   ctx.fillStyle = '#9b8fc7';
-  ctx.font = font(26);
-  ctx.fillText('ВЫДАН', CW / 2, 344);
+  fitted(ctx, 'ВЫДАН', 352, inner, 26, body);
   ctx.fillStyle = '#ff4d8d';
-  ctx.font = font(52, 700);
-  ctx.fillText(playerName, CW / 2, 400);
+  fitted(ctx, playerName, 412, inner, 42, display);
 
   // условия
-  ctx.fillStyle = '#9b8fc7';
-  ctx.font = font(22);
-  const termsTop = 452;
-  prize.terms.forEach((line, i) => ctx.fillText(line, CW / 2, termsTop + i * TERMS_STEP));
+  ctx.fillStyle = '#c3b6e8';
+  const termsTop = 466;
+  prize.terms.forEach((line, i) =>
+    fitted(ctx, line, termsTop + i * TERMS_STEP, inner, 24, body),
+  );
 
   // подпись и дата
   const signY = termsTop + prize.terms.length * TERMS_STEP + 24;
   ctx.fillStyle = '#3ff0d4';
   ctx.fillRect(CW / 2 - 200, signY, 400, 4);
   ctx.fillStyle = '#f4eefc';
-  ctx.font = font(24);
-  ctx.fillText(authorName, CW / 2, signY + 40);
+  fitted(ctx, authorName, signY + 42, inner, 26, body);
   ctx.fillStyle = '#9b8fc7';
-  ctx.font = font(20);
-  ctx.fillText(new Date().toLocaleDateString('ru-RU'), CW / 2, signY + 72);
+  fitted(ctx, new Date().toLocaleDateString('ru-RU'), signY + 76, inner, 22, body);
 }
 
 export default function Prize({ onReplay }) {
