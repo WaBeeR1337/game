@@ -2,7 +2,11 @@ import { useEffect, useMemo, useRef } from 'react';
 import config from '../config';
 import sfx from '../sound';
 
-const { prize, playerName, authorName } = config;
+const { prize, playerName, playerNameDative, authorName } = config;
+
+// На сертификате «ВЫДАН Кристине» — нужен дательный падеж.
+// Если в config его не задали, берём обычное имя.
+const certificateName = playerNameDative || playerName;
 
 // Сертификат рисуется на canvas, поэтому его можно скачать картинкой.
 // Высота подстраивается под количество строк-условий из config.
@@ -88,7 +92,7 @@ function drawCertificate(ctx) {
   ctx.fillStyle = '#9b8fc7';
   fitted(ctx, 'ВЫДАН', 352, inner, 26, body);
   ctx.fillStyle = '#ff4d8d';
-  fitted(ctx, playerName, 412, inner, 42, display);
+  fitted(ctx, certificateName, 412, inner, 42, display);
 
   // условия
   ctx.fillStyle = '#c3b6e8';
